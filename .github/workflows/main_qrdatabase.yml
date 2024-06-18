@@ -66,4 +66,4 @@ jobs:
         with:
           app-name: 'QRDatabase'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_4288C17DF23348718964B72C7C9C87D7 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_B40076CB65094247A36282A3DF4F0131 }}
