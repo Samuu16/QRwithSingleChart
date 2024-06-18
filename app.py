@@ -10,10 +10,15 @@ import urllib.parse
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from sqlalchemy import LargeBinary
+from dotenv import load_dotenv
 
 from flask import send_file
 from PIL import Image, ImageDraw, ImageFont
 
+# Load environment variables from .env file
+load_dotenv()
+
+# Instantiate Flask application
 app = Flask(__name__)
 
 # Read environment variables
@@ -25,6 +30,12 @@ driver = os.getenv('SQL_DRIVER', 'ODBC Driver 18 for SQL Server')
 encrypt = os.getenv('SQL_ENCRYPT', 'yes')
 trust_cert = os.getenv('SQL_TRUST_SERVER_CERTIFICATE', 'no')
 timeout = os.getenv('SQL_CONNECTION_TIMEOUT', '30')
+
+# Print environment variables for debugging
+print(f"SQL_SERVER: {server}")
+print(f"SQL_DATABASE: {database}")
+print(f"SQL_USER: {username}")
+print(f"SQL_PASSWORD: {'*****'}")  # Print password partially for security
 
 # Construct the connection string
 params = urllib.parse.quote_plus(
