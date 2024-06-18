@@ -3,8 +3,10 @@ from flask_sqlalchemy import SQLAlchemy
 import bcrypt
 import logging
 import json
+import os
 import qrcode  # Import QR code library
 import io
+import urllib.parse
 from reportlab.lib.pagesizes import letter
 from reportlab.pdfgen import canvas
 from sqlalchemy import LargeBinary
@@ -13,7 +15,32 @@ from flask import send_file
 from PIL import Image, ImageDraw, ImageFont
 
 app = Flask(__name__)
-app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
+
+# Read environment variables
+server = os.getenv('SQL_SERVER')
+database = os.getenv('SQL_DATABASE')
+username = os.getenv('SQL_USER')
+password = os.getenv('SQL_PASSWORD')
+driver = os.getenv('SQL_DRIVER', 'ODBC Driver 18 for SQL Server')
+encrypt = os.getenv('SQL_ENCRYPT', 'yes')
+trust_cert = os.getenv('SQL_TRUST_SERVER_CERTIFICATE', 'no')
+timeout = os.getenv('SQL_CONNECTION_TIMEOUT', '30')
+
+# Construct the connection string
+params = urllib.parse.quote_plus(
+    f"DRIVER={driver};"
+    f"SERVER={server},1433;"
+    f"DATABASE={database};"
+    f"UID={username};"
+    f"PWD={password};"
+    f"Encrypt={encrypt};"
+    f"TrustServerCertificate={trust_cert};"
+    f"Connection Timeout={timeout};"
+)
+
+app.config['SQLALCHEMY_DATABASE_URI'] = f'mssql+pyodbc:///?odbc_connect={params}'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
 db = SQLAlchemy(app)
 app.secret_key = 'secret_key'
 
